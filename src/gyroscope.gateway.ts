@@ -57,7 +57,7 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 
-@WebSocketGateway()
+@WebSocketGateway({ path: '/socket', transports: ['websocket'] })
 export class GyroscopeGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {

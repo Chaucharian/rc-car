@@ -1,5 +1,5 @@
 const WebSocket = require('ws');
-const client = new WebSocket('ws://localhost:3000');
+const client = new WebSocket('ws://localhost:3000/socket');
 
 client.on('error', console.error);
 client.on('open', () => {
