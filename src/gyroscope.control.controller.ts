@@ -23,8 +23,10 @@ export class GyroControlController {
       <p id="gamma">Gamma: -</p>
       <script>
 
-      const socketConnection = new WebSocket("ws://localhost:3000"); // Replace with your WebSocket server URL
+      // const socketConnection = new WebSocket("ws://localhost:3000"); // Replace with your WebSocket server URL
+      const socketConnection = new WebSocket("wss://rc-car-service.onrender.com:443/socket"); // Replace with your WebSocket server URL
 
+      
       socketConnection.addEventListener('open', (event) => {
       console.log('Connected to WebSocket server');
 

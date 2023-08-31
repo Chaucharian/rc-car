@@ -1,5 +1,5 @@
 const WebSocket = require('ws');
-const client = new WebSocket('ws://localhost:3000/socket');
+const client = new WebSocket('wss://rc-car-service.onrender.com:443/socket');
 
 client.on('error', console.error);
 client.on('open', () => {
