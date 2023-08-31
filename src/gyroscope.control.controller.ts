@@ -51,7 +51,7 @@ export class GyroControlController {
           document.getElementById('alpha').textContent = 'Alpha: ' + gyroData.alpha;
           document.getElementById('beta').textContent = 'Beta: ' + gyroData.beta;
           document.getElementById('gamma').textContent = 'Gamma: ' + gyroData.gamma;
-          socketConnection.send(JSON.stringify({ event: 'controlData', data: gyroData }));
+          socketConnection.send(JSON.stringify({ event: 'message', data: gyroData }));
         });
         // const ws = new WebSocket('ws://' + location.hostname + ':3000'); // Adjust the endpoint
         // // const ws = new WebSocket('ws://7d50-201-213-84-107.ngrok-free.app/gyro-data'); // Adjust the endpoint
