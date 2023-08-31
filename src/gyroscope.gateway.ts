@@ -82,14 +82,12 @@ export class GyroscopeGateway
   }
 
   @SubscribeMessage('message')
-  handleMessage(data, client) {
+  handleMessage(client, data) {
     // console.log('Received message:', data);
-
+    // console.log('DATAA', data);
     // Broadcast the message to all connected clients
     this.connectedClients.forEach((connectedClient) => {
-      connectedClient.send(
-        JSON.stringify({ event: 'controlData', data: 'Broadcasted message' }),
-      );
+      connectedClient.send(JSON.stringify({ event: 'controlData', data }));
     });
   }
 }
