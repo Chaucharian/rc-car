@@ -13,7 +13,7 @@ export class GyroControlController {
     </head>
     <body>
     // <script src="/socket.io/socket.io.js"></script>
-    <script src="/socket.io-client/dist/socket.io.js"></script>
+    // <script src="/socket.io-client/dist/socket.io.js"></script>
 
       <h1>Servo Control with Gyroscope</h1>
       <p>Use gyroscope data to control the servo:</p>
@@ -22,27 +22,22 @@ export class GyroControlController {
       <p id="beta">Beta: -</p>
       <p id="gamma">Gamma: -</p>
       <script>
-      const socket = io();
 
-      socket.on('connect', () => {
-        console.log('Connected to WebSocket server');
-        
-        // Send data to the server
-        // socket.emit('gyroData', { alpha: 45, beta: 30, gamma: 60 });
+      const socketConnection = new WebSocket("ws://localhost:3000"); // Replace with your WebSocket server URL
+
+      socketConnection.addEventListener('open', (event) => {
+      console.log('Connected to WebSocket server');
+
+
+      socketConnection.addEventListener('message', function(event) {
+        const message = event.data;
+        console.log('Received message:', message); 
+      })
+
       });
-      
-      socket.on('gyroData', (gyro) => {
-        console.log('Dataa',gyro);
-        const receivedData = JSON.parse(event.data);
-          document.getElementById('alpha').textContent = 'Alpha: ' + receivedData.alpha;
-          document.getElementById('beta').textContent = 'Beta: ' + receivedData.beta;
-          document.getElementById('gamma').textContent = 'Gamma: ' + receivedData.gamma;
-        // Send data to the server
-        // socket.emit('gyroData', { alpha: 45, beta: 30, gamma: 60 });
-      });
-      
-      socket.on('disconnect', () => {
-        console.log('Disconnected from WebSocket server');
+
+      socketConnection.addEventListener('close', (event) => {
+        console.log('Connection closed');
       });
 
       window.addEventListener('deviceorientation', function(event) {
@@ -54,8 +49,7 @@ export class GyroControlController {
           document.getElementById('alpha').textContent = 'Alpha: ' + gyroData.alpha;
           document.getElementById('beta').textContent = 'Beta: ' + gyroData.beta;
           document.getElementById('gamma').textContent = 'Gamma: ' + gyroData.gamma;
-          socket.emit('gyroData', gyroData);
-          // ws.send(JSON.stringify(gyroData));
+          socketConnection.send(JSON.stringify({ event: 'controlData', data: gyroData }));
         });
         // const ws = new WebSocket('ws://' + location.hostname + ':3000'); // Adjust the endpoint
         // // const ws = new WebSocket('ws://7d50-201-213-84-107.ngrok-free.app/gyro-data'); // Adjust the endpoint
