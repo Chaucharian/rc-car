@@ -161,8 +161,8 @@ export class GyroControlController {
             document.getElementById('beta').textContent = 'Beta: ' + gyroData.beta;
             document.getElementById('gamma').textContent = 'Gamma: ' + gyroData.gamma;
             gyroData = { alpha: event.alpha, beta: event.beta, gamma: event.gamma };
-            // gyroData = event
-            // sendControls(gyroData)
+            sendControls()
+            
           });
         
         </script>
