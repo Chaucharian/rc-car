@@ -1,0 +1,74 @@
+<html>
+
+  <head>
+    <title>Servo Control with Gyroscope</title>
+    <!-- Include Handlebars.js library -->
+    <script
+      src='https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js'
+    ></script>
+  </head>
+
+  <body>
+    <h1>Servo Control with Gyroscope</h1>
+    <p>Use gyroscope data to control the servo:</p>
+    <p>Gyroscope Data:</p>
+    <p id='alpha'>Alpha: -</p>
+    <p id='beta'>Beta: -</p>
+    <p id='gamma'>Gamma: -</p>
+    <b>Car Accelerator</b><br /><br />
+    <button
+      type='button'
+      onmousedown='accelerate()'
+      onmouseup='releaseButton()'
+      ontouchstart='accelerate()'
+      ontouchend='releaseButton()'
+    >
+      Accelerate
+    </button>
+
+    <!-- Define Handlebars template for dynamic data -->
+    <script id='gyro-template' type='text/x-handlebars-template'>
+      <p>Alpha:
+      {{alpha}}</p> <p>Beta:
+      {{beta}}</p> <p>Gamma:
+      {{gamma}}</p>
+    </script>
+
+    <script>
+      // Replace with your WebSocket server URL const socketConnection = new
+      WebSocket('wss://rc-car-service.onrender.com:443/socket'); let gyroData =
+      { alpha: 0, beta: 0, gamma: 0 }; var speed = 0; var accelerating = false;
+      // Function to send motor speed value function sendSpeed(speed) {
+      console.log('speed', speed); // connection.send(speed); } // Function to
+      smoothly decrease speed to 0 function smoothStop() { if (speed > 0) { var
+      interval = setInterval(function () { speed -= 10; // Decrease speed
+      gradually if (speed <= 0) { clearInterval(interval); speed = 0; }
+      sendControls(); // sendSpeed(speed); }, 100); // Adjust the interval as
+      needed } } // Function to accelerate smoothly when button is pressed
+      function accelerate() { if (!accelerating) { accelerating = true; var
+      interval = setInterval(function () { if (accelerating && speed < 255) {
+      speed += 10; // Increase speed gradually // sendSpeed(speed);
+      sendControls(); } else { clearInterval(interval); } }, 100); // Adjust the
+      interval as needed } } // Function to release button and stop smoothly
+      function releaseButton() { accelerating = false; smoothStop(); } //
+      Function to send motor controls to WebSocket server function
+      sendControls() { const direction = 'forward'; // Use the Handlebars
+      template to update gyroscope data var source =
+      document.getElementById('gyro-template').innerHTML; var template =
+      Handlebars.compile(source); var context = { alpha: gyroData.alpha, beta:
+      gyroData.beta, gamma: gyroData.gamma }; var html = template(context);
+      document.getElementById('alpha').innerHTML = html; socketConnection.send(
+      JSON.stringify({ event: 'message', data: { gyroData, speed, direction },
+      }) ); } socketConnection.addEventListener('open', (event) => {
+      console.log('Connected to WebSocket server');
+      socketConnection.addEventListener('message', function (event) { const
+      message = event.data; console.log('Received message:', message); }); });
+      socketConnection.addEventListener('close', (event) => {
+      console.log('Connection closed'); });
+      window.addEventListener('deviceorientation', function (event) { gyroData =
+      { alpha: event.alpha, beta: event.beta, gamma: event.gamma };
+      sendControls(); });
+    </script>
+  </body>
+
+</html>
