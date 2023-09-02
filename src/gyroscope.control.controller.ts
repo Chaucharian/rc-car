@@ -160,7 +160,8 @@ export class GyroControlController {
             document.getElementById('alpha').textContent = 'Alpha: ' + gyroData.alpha;
             document.getElementById('beta').textContent = 'Beta: ' + gyroData.beta;
             document.getElementById('gamma').textContent = 'Gamma: ' + gyroData.gamma;
-            gyroData = event
+            gyroData = { alpha: event.alpha, beta: event.beta, gamma: event.gamma };
+            // gyroData = event
             // sendControls(gyroData)
           });
         
